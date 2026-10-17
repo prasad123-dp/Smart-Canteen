@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restora | Cart & Orders</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="font-sans" data-page="cart">
+
+    <!-- Advanced UPI Payment Modal -->
+    <div id="upiModal" class="hidden fixed inset-0 z-[80] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div class="bg-white p-6 rounded-3xl shadow-xl w-full max-w-sm text-center">
+
+            <h3 class="text-xl font-bold mb-2 text-black">UPI Payment</h3>
+
+            <div id="qrContainer" class="flex justify-center mb-4"></div>
+
+            <div class="bg-gray-100 p-4 rounded-xl mb-4">
+                <p class="text-sm text-gray-600">Amount</p>
+                <p class="text-2xl font-black text-orange-600">₹<span id="upiAmount">0</span></p>
+            </div>
+
+            <input type="text"
+                   id="upiIdInput"
+                   placeholder="Enter UPI ID (example@upi)"
+                   class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-orange-500 text-black mb-4">
+
+            <button onclick="confirmUPIPayment()"
+                    id="upiPayBtn"
+                    class="w-full bg-orange-600 text-white py-3 rounded-xl font-bold hover:bg-black transition">
+                Pay Now
+            </button>
+
+            <button onclick="closeUPIModal()"
+                    class="w-full text-gray-400 text-sm mt-3">
+                Cancel
+            </button>
+        </div>
+    </div>
+
+    <!-- Session Banner -->
+    <div id="sessionBanner" class="hidden w-full text-center py-2 px-4 text-xs font-bold"></div>
+
+    <!-- Order Feedback Modal -->
+    <div id="orderFeedbackModal" class="hidden fixed inset-0 z-[85] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div class="bg-white p-6 rounded-3xl shadow-xl w-full max-w-md relative">
+            <button onclick="closeOrderFeedbackModal()" class="absolute top-4 right-4 text-red-500 hover:text-red-700 transition text-xl">
+                <i class="fas fa-times-circle"></i>
+            </button>
+            <h2 class="text-xl font-bold mb-1 text-center text-black">Rate Your Order</h2>
+            <p class="text-sm text-gray-500 mb-4 text-center">How was your <span id="orderFeedbackItemName" class="text-orange-600 font-bold"></span> experience?</p>
+
+            <div id="orderFeedbackStarsInput" class="flex justify-center gap-2 mb-4"></div>
+            <textarea id="orderFeedbackComment" rows="3" placeholder="Write your feedback (optional)" class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-orange-500 text-black mb-4 resize-none"></textarea>
+
+            <button onclick="submitOrderFeedback()" class="w-full bg-orange-600 text-white py-3 rounded-xl font-bold hover:bg-black transition">Submit Feedback</button>
+            <button onclick="closeOrderFeedbackModal()" class="w-full text-gray-400 text-sm mt-3">Skip</button>
+        </div>
+    </div>
+
+    <!-- Success Screen -->
+    <div id="successScreen"
+         class="hidden fixed inset-0 bg-gradient-to-br from-green-400 to-green-600
+         z-[90] flex flex-col items-center justify-center text-center p-6 text-white
+         transition-opacity duration-500">
+         <div class="glow-bg"></div>
+
+        <div class="success-circle">
+            <svg viewBox="0 0 52 52" class="checkmark">
+                <circle cx="26" cy="26" r="25" fill="none"/>
+                <path fill="none" d="M14 27l7 7 16-16"/>
+            </svg>
+        </div>
+
+        <h2 class="text-3xl font-bold mt-6 animate-slideUp">
+            Payment Successful
+        </h2>
+
+        <div class="bg-white text-black mt-6 p-6
+                    rounded-2xl shadow-2xl w-full max-w-sm
+                    animate-slideUp">
+
+            <p class="text-sm text-gray-500">Transaction ID</p>
+            <p id="txnText" class="font-bold text-lg text-green-600 mb-4"></p>
+
+            <p class="text-sm text-gray-500">Amount Paid</p>
+            <p id="successAmount" class="font-bold text-2xl mb-4"></p>
+
+            <p class="text-xs text-gray-400">Paid via UPI</p>
+        </div>
+
+        <div class="flex gap-4 mt-6">
+
+            <button onclick="rateLastOrder()"
+                    class="bg-yellow-400 text-black px-6 py-3
+                           rounded-xl font-bold shadow-lg
+                           hover:scale-110 transition-all duration-300">
+                <i class="fas fa-star mr-2"></i>Rate Your Order
+            </button>
+
+            <button onclick="downloadInvoice()"
+                    class="bg-white text-green-600 px-6 py-3
+                           rounded-xl font-bold shadow-lg
+                           hover:scale-110 transition-all duration-300">
+                <i class="fas fa-download mr-2"></i>Download Invoice
+            </button>
+
+            <button onclick="goToHome()"
+                    class="bg-green-800 px-6 py-3
+                           rounded-xl font-bold shadow-lg
+                           hover:scale-110 transition-all duration-300">
+                Go to Dashboard
+            </button>
+
+        </div>
+
+    </div>
+
+    <div id="cartOrdersPage" class="hidden min-h-screen student-bg p-4 md:p-6">
+        <div class="w-full">
+            <div class="flex items-center gap-4 mb-6">
+                <button onclick="closeCartOrdersPage()" class="bg-white p-3 rounded-xl shadow-sm hover:bg-orange-50 transition">
+                    <i class="fas fa-arrow-left text-orange-600"></i>
+                </button>
+                <h1 class="text-2xl md:text-3xl font-black text-slate-900">Cart & Orders</h1>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Cart Section -->
+                <div class="bg-white p-6 rounded-3xl shadow-sm border">
+                    <h2 class="text-xl font-bold mb-4 flex items-center gap-2 text-gray-800"><i class="fas fa-shopping-basket text-orange-500"></i> My Cart</h2>
+                    <div id="cartItemsPage" class="space-y-3 mb-4 max-h-96 overflow-y-auto"></div>
+                    <div id="cartSummaryPage" class="hidden border-t pt-4">
+                        <div class="flex justify-between font-bold mb-4 text-gray-800"><span>Total</span><span>₹<span id="cartTotalPage">0</span></span></div>
+                        <button onclick="goToCheckout()" id="payBtnPage" class="w-full bg-black text-white py-3 rounded-xl font-bold hover:bg-orange-600 transition">Place Order</button>
+                    </div>
+                </div>
+
+                <!-- Active Orders Section -->
+                <div class="bg-white p-6 rounded-3xl shadow-sm border">
+                    <h2 class="text-xl font-bold mb-4 flex items-center gap-2 text-gray-800"><i class="fas fa-fire text-orange-500"></i> My Active Orders</h2>
+                    <div id="myOrdersListPage" class="space-y-3 max-h-96 overflow-y-auto"></div>
+                </div>
+            </div>
+
+            <div class="mt-6 space-y-3">
+                <button onclick="openOrderHistoryPage()" class="w-full bg-gray-100 text-gray-700 py-3 rounded-xl font-bold hover:bg-gray-200 transition"><i class="fas fa-history mr-2"></i>View Order History</button>
+                <button onclick="openFeedbackPage()" class="w-full bg-orange-50 text-orange-600 py-3 rounded-xl font-bold hover:bg-orange-100 transition"><i class="fas fa-star mr-2"></i>Feedback & Ratings</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="script.js?v=20240613-2" defer></script>
+</body>
+</html>

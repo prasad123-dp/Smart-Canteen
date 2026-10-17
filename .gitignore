@@ -1,0 +1,32 @@
+# Build artifacts
+target/
+.app_logic/target/
+backend/target/
+
+# Logs
+*.log
+backend-error.log
+backend.log
+
+# Database files
+*.db
+*.mv.db
+*.trace.db
+
+# Kilo config
+.kilo/
+
+# Node modules
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Environment
+.env
+.env.local

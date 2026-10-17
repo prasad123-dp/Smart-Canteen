@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restora | Super Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="font-sans" data-page="superadmin">
+
+    <div id="superAdminDashboard" class="hidden min-h-screen bg-gray-100 p-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-3xl font-bold text-slate-900">Super Admin Dashboard</h1>
+                    <p class="text-gray-500">Welcome, Super Admin</p>
+                </div>
+                <div class="flex gap-4">
+                    <button onclick="toggleDarkMode()" class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-xl text-black"><i class="fas fa-moon"></i></button>
+                    <button onclick="logout()" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-xl text-white">Logout</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-3xl shadow-sm border">
+                    <h2 class="text-xl font-bold mb-4 text-slate-900 flex items-center gap-2"><i class="fas fa-users text-orange-600"></i> All Users</h2>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="p-3 text-left text-gray-600 font-bold">Name</th>
+                                    <th class="p-3 text-left text-gray-600 font-bold">Roll No</th>
+                                    <th class="p-3 text-left text-gray-600 font-bold">Email</th>
+                                    <th class="p-3 text-left text-gray-600 font-bold">Password</th>
+                                    <th class="p-3 text-left text-gray-600 font-bold">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-3xl shadow-sm border">
+                    <h2 class="text-xl font-bold mb-4 text-slate-900 flex items-center gap-2"><i class="fas fa-user-shield text-blue-600"></i> All Admins
+                    <button onclick="showAddAdminModal()" class="ml-auto bg-yellow-500 text-black px-3 py-1 rounded-lg text-sm font-bold hover:bg-yellow-400 transition"><i class="fas fa-plus"></i> Add Admin</button></h2>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="p-3 text-left text-gray-600 font-bold">Name</th>
+                                    <th class="p-3 text-left text-gray-600 font-bold">Email</th>
+                                    <th class="p-3 text-left text-gray-600 font-bold">Assigned Canteen</th>
+                                    <th class="p-3 text-left text-gray-600 font-bold">Password</th>
+                                    <th class="p-3 text-left text-gray-600 font-bold">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminsTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-3xl shadow-sm border lg:col-span-2">
+                    <h2 class="text-xl font-bold mb-4 text-slate-900 flex items-center gap-2"><i class="fas fa-store text-green-600"></i> All Canteens
+                    <button onclick="showAddCanteenModal()" class="ml-auto bg-yellow-500 text-black px-3 py-1 rounded-lg text-sm font-bold hover:bg-yellow-400 transition"><i class="fas fa-plus"></i> Add Canteen</button></h2>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="p-3 text-left text-gray-600 font-bold">Canteen Name</th>
+                                    <th class="p-3 text-left text-gray-600 font-bold">Location</th>
+                                    <th class="p-3 text-left text-gray-600 font-bold">Active</th>
+                                    <th class="p-3 text-left text-gray-600 font-bold">Admin</th>
+                                    <th class="p-3 text-left text-gray-600 font-bold">Total Orders</th>
+                                    <th class="p-3 text-left text-gray-600 font-bold">Total Revenue</th>
+                                    <th class="p-3 text-left text-gray-600 font-bold">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="canteensTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Admin Modal -->
+    <div id="addAdminModal" class="hidden fixed inset-0 z-[80] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div class="bg-white p-8 rounded-3xl shadow-xl w-full max-w-md relative">
+            <button onclick="hideAddAdminModal()" class="absolute top-4 right-4 text-red-500 hover:text-red-700 transition text-xl">
+                <i class="fas fa-times-circle"></i>
+            </button>
+            <h2 class="text-2xl font-bold mb-2 text-center text-black">Add New Admin</h2>
+            <form id="addAdminForm" class="space-y-4">
+                <input type="text" id="newAdminName" placeholder="Admin Name" required class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-black">
+                <input type="email" id="newAdminEmail" placeholder="Admin Email" required class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-black">
+<div class="space-y-1 relative">
+                     <input type="password" id="newAdminPass" placeholder="Password" autocomplete="new-password" required class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-black pr-10">
+                     <button type="button" onclick="togglePasswordVisibility('newAdminPass', 'newAdminEye')" class="absolute right-3 top-3 text-gray-400 hover:text-gray-600"><i id="newAdminEye" class="fas fa-eye"></i></button>
+                 </div>
+                  <select id="newAdminCanteen" required class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-black">
+                     <option value="">Select Active Canteen to Assign</option>
+                  </select>
+                <button type="submit" class="w-full bg-yellow-500 text-black py-3 rounded-xl font-bold hover:bg-yellow-400 transition">Add Admin</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Admin Modal -->
+    <div id="editAdminModal" class="hidden fixed inset-0 z-[80] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div class="bg-white p-8 rounded-3xl shadow-xl w-full max-w-md relative">
+            <button onclick="hideEditAdminModal()" class="absolute top-4 right-4 text-red-500 hover:text-red-700 transition text-xl">
+                <i class="fas fa-times-circle"></i>
+            </button>
+            <h2 class="text-2xl font-bold mb-2 text-center text-black">Edit Admin</h2>
+            <form id="editAdminForm" class="space-y-4">
+                <input type="hidden" id="editAdminIndex">
+<input type="text" id="editAdminName" placeholder="Admin Name" required class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-black">
+                 <input type="email" id="editAdminEmail" placeholder="Admin Email" required class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-black">
+                 <div class="space-y-1 relative">
+                     <input type="password" id="editAdminPass" placeholder="New Password (leave empty to keep same)" autocomplete="new-password" class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-black pr-10">
+                     <button type="button" onclick="togglePasswordVisibility('editAdminPass', 'editAdminEye')" class="absolute right-3 top-3 text-gray-400 hover:text-gray-600"><i id="editAdminEye" class="fas fa-eye"></i></button>
+                 </div>
+                 <select id="editAdminCanteen" required class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-black">
+                    <option value="Ball Canteen 1">Ball Canteen 1</option>
+                    <option value="Ball Canteen 2">Ball Canteen 2</option>
+                    <option value="3rd Campus Biriyani">3rd Campus Biriyani</option>
+                </select>
+                <button type="submit" class="w-full bg-yellow-500 text-black py-3 rounded-xl font-bold hover:bg-yellow-400 transition">Update Admin</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Canteen Modal -->
+    <div id="addCanteenModal" class="hidden fixed inset-0 z-[80] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div class="bg-white p-8 rounded-3xl shadow-xl w-full max-w-md relative">
+            <button onclick="hideAddCanteenModal()" class="absolute top-4 right-4 text-red-500 hover:text-red-700 transition text-xl">
+                <i class="fas fa-times-circle"></i>
+            </button>
+            <h2 class="text-2xl font-bold mb-2 text-center text-black">Add New Canteen</h2>
+            <form id="addCanteenForm" class="space-y-4">
+                <input type="text" id="newCanteenName" placeholder="Canteen Name" required class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-black">
+                <input type="text" id="newCanteenLocation" placeholder="Area / Location" required class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-black">
+                <select id="newCanteenActive" required class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-black">
+                    <option value="true">Active</option>
+                    <option value="false">Inactive</option>
+                </select>
+                <button type="submit" class="w-full bg-yellow-500 text-black py-3 rounded-xl font-bold hover:bg-yellow-400 transition">Add Canteen</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Canteen Modal -->
+    <div id="editCanteenModal" class="hidden fixed inset-0 z-[80] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div class="bg-white p-8 rounded-3xl shadow-xl w-full max-w-md relative">
+            <button onclick="hideEditCanteenModal()" class="absolute top-4 right-4 text-red-500 hover:text-red-700 transition text-xl">
+                <i class="fas fa-times-circle"></i>
+            </button>
+            <h2 class="text-2xl font-bold mb-2 text-center text-black">Edit Canteen</h2>
+            <form id="editCanteenForm" class="space-y-4">
+                <input type="hidden" id="editCanteenId">
+                <input type="text" id="editCanteenName" placeholder="Canteen Name" required class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-black">
+                <input type="text" id="editCanteenLocation" placeholder="Location" required class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-black">
+                <select id="editCanteenActive" required class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-black">
+                    <option value="true">Active</option>
+                    <option value="false">Inactive</option>
+                </select>
+                <button type="submit" class="w-full bg-yellow-500 text-black py-3 rounded-xl font-bold hover:bg-yellow-400 transition">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js?v=20240613-2" defer></script>
+</body>
+</html>

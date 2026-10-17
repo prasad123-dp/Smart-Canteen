@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restora | Kitchen Terminal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="font-sans" data-page="admin">
+
+    <!-- Add Admin Modal -->
+    <div id="addAdminModal" class="hidden fixed inset-0 z-[80] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div class="bg-white p-8 rounded-3xl shadow-xl w-full max-w-md relative">
+            <button onclick="hideAddAdminModal()" class="absolute top-4 right-4 text-red-500 hover:text-red-700 transition text-xl">
+                <i class="fas fa-times-circle"></i>
+            </button>
+            <h2 class="text-2xl font-bold mb-2 text-center text-black">Add New Admin</h2>
+            <form id="addAdminForm" class="space-y-4">
+                <input type="text" id="newAdminName" placeholder="Admin Name" required class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-black">
+                <input type="email" id="newAdminEmail" placeholder="Admin Email" required class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-black">
+<div class="space-y-1 relative">
+                     <input type="password" id="newAdminPass" placeholder="Password" autocomplete="new-password" required class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-black pr-10">
+                     <button type="button" onclick="togglePasswordVisibility('newAdminPass', 'newAdminEye')" class="absolute right-3 top-3 text-gray-400 hover:text-gray-600"><i id="newAdminEye" class="fas fa-eye"></i></button>
+                 </div>
+                  <select id="newAdminCanteen" required class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-black">
+                     <option value="">Select Active Canteen to Assign</option>
+                  </select>
+                <button type="submit" class="w-full bg-yellow-500 text-black py-3 rounded-xl font-bold hover:bg-yellow-400 transition">Add Admin</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Admin Modal -->
+    <div id="editAdminModal" class="hidden fixed inset-0 z-[80] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div class="bg-white p-8 rounded-3xl shadow-xl w-full max-w-md relative">
+            <button onclick="hideEditAdminModal()" class="absolute top-4 right-4 text-red-500 hover:text-red-700 transition text-xl">
+                <i class="fas fa-times-circle"></i>
+            </button>
+            <h2 class="text-2xl font-bold mb-2 text-center text-black">Edit Admin</h2>
+            <form id="editAdminForm" class="space-y-4">
+                <input type="hidden" id="editAdminIndex">
+<input type="text" id="editAdminName" placeholder="Admin Name" required class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-black">
+                 <input type="email" id="editAdminEmail" placeholder="Admin Email" required class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-black">
+                 <div class="space-y-1 relative">
+                     <input type="password" id="editAdminPass" placeholder="New Password (leave empty to keep same)" autocomplete="new-password" class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-black pr-10">
+                     <button type="button" onclick="togglePasswordVisibility('editAdminPass', 'editAdminEye')" class="absolute right-3 top-3 text-gray-400 hover:text-gray-600"><i id="editAdminEye" class="fas fa-eye"></i></button>
+                 </div>
+                 <select id="editAdminCanteen" required class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-black">
+                    <option value="Ball Canteen 1">Ball Canteen 1</option>
+                    <option value="Ball Canteen 2">Ball Canteen 2</option>
+                    <option value="3rd Campus Biriyani">3rd Campus Biriyani</option>
+                </select>
+                <button type="submit" class="w-full bg-yellow-500 text-black py-3 rounded-xl font-bold hover:bg-yellow-400 transition">Update Admin</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Canteen Modal -->
+    <div id="addCanteenModal" class="hidden fixed inset-0 z-[80] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div class="bg-white p-8 rounded-3xl shadow-xl w-full max-w-md relative">
+            <button onclick="hideAddCanteenModal()" class="absolute top-4 right-4 text-red-500 hover:text-red-700 transition text-xl">
+                <i class="fas fa-times-circle"></i>
+            </button>
+            <h2 class="text-2xl font-bold mb-2 text-center text-black">Add New Canteen</h2>
+            <form id="addCanteenForm" class="space-y-4">
+                <input type="text" id="newCanteenName" placeholder="Canteen Name" required class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-black">
+                <input type="text" id="newCanteenLocation" placeholder="Area / Location" required class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-black">
+                <select id="newCanteenActive" required class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-black">
+                    <option value="true">Active</option>
+                    <option value="false">Inactive</option>
+                </select>
+                <button type="submit" class="w-full bg-yellow-500 text-black py-3 rounded-xl font-bold hover:bg-yellow-400 transition">Add Canteen</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Canteen Modal -->
+    <div id="editCanteenModal" class="hidden fixed inset-0 z-[80] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div class="bg-white p-8 rounded-3xl shadow-xl w-full max-w-md relative">
+            <button onclick="hideEditCanteenModal()" class="absolute top-4 right-4 text-red-500 hover:text-red-700 transition text-xl">
+                <i class="fas fa-times-circle"></i>
+            </button>
+            <h2 class="text-2xl font-bold mb-2 text-center text-black">Edit Canteen</h2>
+            <form id="editCanteenForm" class="space-y-4">
+                <input type="hidden" id="editCanteenId">
+                <input type="text" id="editCanteenName" placeholder="Canteen Name" required class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-black">
+                <input type="text" id="editCanteenLocation" placeholder="Location" required class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-black">
+                <select id="editCanteenActive" required class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-black">
+                    <option value="true">Active</option>
+                    <option value="false">Inactive</option>
+                </select>
+                <button type="submit" class="w-full bg-yellow-500 text-black py-3 rounded-xl font-bold hover:bg-yellow-400 transition">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Item Modal -->
+    <div id="addItemModal" class="hidden fixed inset-0 z-[80] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div class="bg-white p-8 rounded-3xl shadow-xl w-full max-w-md relative">
+            <button onclick="hideAddItemModal()" class="absolute top-4 right-4 text-red-500 hover:text-red-700 transition text-xl">
+                <i class="fas fa-times-circle"></i>
+            </button>
+            <h2 class="text-2xl font-bold mb-2 text-center text-black">Add New Menu Item</h2>
+            <form id="addItemForm" class="space-y-4">
+                <input type="text" id="newItemName" placeholder="Item Name" required class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-black">
+                <input type="number" id="newItemPrice" placeholder="Price (₹)" required min="1" class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-black">
+                <input type="number" id="newItemStock" placeholder="Stock Quantity" required min="0" value="50" class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-black">
+                <select id="newItemCategory" required class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-black">
+                    <option value="">Select Category</option>
+                    <option value="Veg">Veg</option>
+                    <option value="Non-Veg">Non-Veg</option>
+                    <option value="Cakes">Cakes</option>
+                    <option value="Icecreams">Icecreams</option>
+                    <option value="Drinks">Drinks</option>
+                    <option value="Choclates">Choclates</option>
+                </select>
+                <select id="newItemSlot" class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-black">
+                    <option value="BOTH">Both (Lunch & Evening)</option>
+                    <option value="LUNCH">🌤 Lunch Only</option>
+                    <option value="EVENING">🌙 Evening Only</option>
+                </select>
+                <button type="submit" class="w-full bg-yellow-500 text-black py-3 rounded-xl font-bold hover:bg-yellow-400 transition">Add Item</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Item Modal -->
+    <div id="editItemModal" class="hidden fixed inset-0 z-[80] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div class="bg-white p-8 rounded-3xl shadow-xl w-full max-w-md relative">
+            <button onclick="hideEditItemModal()" class="absolute top-4 right-4 text-red-500 hover:text-red-700 transition text-xl">
+                <i class="fas fa-times-circle"></i>
+            </button>
+            <h2 class="text-2xl font-bold mb-2 text-center text-black">Edit Menu Item</h2>
+            <form id="editItemForm" class="space-y-4">
+                <input type="hidden" id="editItemIndex">
+                <input type="text" id="editItemName" placeholder="Item Name" required class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-black">
+                <input type="number" id="editItemPrice" placeholder="Price (₹)" required min="1" class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-black">
+                <input type="number" id="editItemStock" placeholder="Stock Quantity" required min="0" class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-black">
+                <select id="editItemCategory" required class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-black">
+                    <option value="Veg">Veg</option>
+                    <option value="Non-Veg">Non-Veg</option>
+                    <option value="Cakes">Cakes</option>
+                    <option value="Icecreams">Icecreams</option>
+                    <option value="Drinks">Drinks</option>
+                    <option value="Choclates">Choclates</option>
+                </select>
+                <select id="editItemSlot" class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-black">
+                    <option value="BOTH">Both (Lunch & Evening)</option>
+                    <option value="LUNCH">🌤 Lunch Only</option>
+                    <option value="EVENING">🌙 Evening Only</option>
+                </select>
+                <button type="submit" class="w-full bg-yellow-500 text-black py-3 rounded-xl font-bold hover:bg-yellow-400 transition">Update Item</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Category Modal -->
+    <div id="addCategoryModal" class="hidden fixed inset-0 z-[80] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div class="bg-white p-8 rounded-3xl shadow-xl w-full max-w-md relative">
+            <button onclick="hideAddCategoryModal()" class="absolute top-4 right-4 text-red-500 hover:text-red-700 transition text-xl">
+                <i class="fas fa-times-circle"></i>
+            </button>
+            <h2 class="text-2xl font-bold mb-2 text-center text-black">Add New Category</h2>
+            <form id="addCategoryForm" class="space-y-4">
+                <input type="text" id="newCategoryName" placeholder="Category Name" required class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-yellow-500 text-black">
+                <button type="submit" class="w-full bg-yellow-500 text-black py-3 rounded-xl font-bold hover:bg-yellow-400 transition">Add Category</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Feedback & Ratings Modal -->
+    <div id="feedbackModal" class="hidden fixed inset-0 z-[80] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div class="bg-white p-6 rounded-3xl shadow-xl w-full max-w-md relative">
+            <button onclick="closeFeedbackModal()" class="absolute top-4 right-4 text-red-500 hover:text-red-700 transition text-xl">
+                <i class="fas fa-times-circle"></i>
+            </button>
+            <h2 class="text-xl font-bold mb-1 text-center text-black">Rate <span id="feedbackItemName" class="text-orange-600"></span></h2>
+            <p class="text-sm text-gray-500 mb-4 text-center">Share your experience</p>
+
+            <input type="hidden" id="feedbackItemId">
+            <div id="feedbackStarsInput" class="flex justify-center gap-2 mb-4"></div>
+            <textarea id="feedbackComment" rows="3" placeholder="Write your feedback (optional)" class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-orange-500 text-black mb-4 resize-none"></textarea>
+
+            <button onclick="submitFeedback()" class="w-full bg-orange-600 text-white py-3 rounded-xl font-bold hover:bg-black transition">Submit Feedback</button>
+
+            <div class="mt-5">
+                <h3 class="text-sm font-bold text-gray-700 mb-2">Recent Reviews</h3>
+                <div id="feedbackListForItem" class="space-y-2 max-h-40 overflow-y-auto"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Advanced UPI Payment Modal -->
+    <div id="upiModal" class="hidden fixed inset-0 z-[80] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div class="bg-white p-6 rounded-3xl shadow-xl w-full max-w-sm text-center">
+            <h3 class="text-xl font-bold mb-2 text-black">UPI Payment</h3>
+            <div id="qrContainer" class="flex justify-center mb-4"></div>
+            <div class="bg-gray-100 p-4 rounded-xl mb-4">
+                <p class="text-sm text-gray-600">Amount</p>
+                <p class="text-2xl font-black text-orange-600">₹<span id="upiAmount">0</span></p>
+            </div>
+            <input type="text" id="upiIdInput" placeholder="Enter UPI ID (example@upi)" class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-orange-500 text-black mb-4">
+            <button onclick="confirmUPIPayment()" id="upiPayBtn" class="w-full bg-orange-600 text-white py-3 rounded-xl font-bold hover:bg-black transition">Pay Now</button>
+            <button onclick="closeUPIModal()" class="w-full text-gray-400 text-sm mt-3">Cancel</button>
+        </div>
+    </div>
+
+    <div id="successScreen" class="hidden fixed inset-0 bg-gradient-to-br from-green-400 to-green-600 z-[90] flex flex-col items-center justify-center text-center p-6 text-white transition-opacity duration-500">
+        <div class="glow-bg"></div>
+        <div class="success-circle">
+            <svg viewBox="0 0 52 52" class="checkmark">
+                <circle cx="26" cy="26" r="25" fill="none"/>
+                <path fill="none" d="M14 27l7 7 16-16"/>
+            </svg>
+        </div>
+        <h2 class="text-3xl font-bold mt-6 animate-slideUp">Payment Successful</h2>
+        <div class="bg-white text-black mt-6 p-6 rounded-2xl shadow-2xl w-full max-w-sm animate-slideUp">
+            <p class="text-sm text-gray-500">Transaction ID</p>
+            <p id="txnText" class="font-bold text-lg text-green-600 mb-4"></p>
+            <p class="text-sm text-gray-500">Amount Paid</p>
+            <p id="successAmount" class="font-bold text-2xl mb-4"></p>
+            <p class="text-xs text-gray-400">Paid via UPI</p>
+        </div>
+        <div class="flex gap-4 mt-6">
+            <button onclick="downloadInvoice()" class="bg-white text-green-600 px-6 py-3 rounded-xl font-bold shadow-lg hover:scale-110 transition-all duration-300"><i class="fas fa-download mr-2"></i>Download Invoice</button>
+            <button onclick="goToHome()" class="bg-green-800 px-6 py-3 rounded-xl font-bold shadow-lg hover:scale-110 transition-all duration-300">Go to Dashboard</button>
+        </div>
+    </div>
+
+    <div id="ownerDashboard" class="hidden min-h-screen owner-bg text-white p-4 md:p-8">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+            <div class="text-center md:text-left">
+                <h1 class="text-2xl md:text-3xl font-bold">Kitchen Terminal</h1>
+                <p class="text-slate-400">Welcome, <span id="displayAdminName" class="text-orange-400">Admin</span> | <span id="adminCanteenName" class="text-yellow-400"></span></p>
+            </div>
+            <div class="flex flex-wrap gap-4 justify-center">
+                <button onclick="toggleDarkMode()" class="bg-slate-700 hover:bg-orange-500 transition px-4 rounded-xl text-white"><i class="fas fa-moon"></i></button>
+                <div class="card-dark px-4 md:px-6 py-2 md:py-3 rounded-2xl">
+                    <p class="text-[10px] md:text-xs text-slate-400 uppercase">Total Profit</p>
+                    <p class="text-lg md:text-xl font-bold text-green-400">₹<span id="adminProfit">0.00</span></p>
+                </div>
+                <div class="card-dark px-4 md:px-6 py-2 md:py-3 rounded-2xl">
+                    <p class="text-[10px] md:text-xs text-slate-400 uppercase">Total Orders</p>
+                    <p class="text-lg md:text-xl font-bold text-orange-400"><span id="totalOrdersStat">0</span></p>
+                </div>
+                <button onclick="logout()" class="bg-slate-700 hover:bg-red-600 transition px-4 rounded-xl"><i class="fas fa-sign-out-alt"></i></button>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2 space-y-8">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div>
+                        <h2 class="text-xl font-bold mb-4 flex items-center gap-2"><i class="fas fa-fire text-orange-500"></i> Active Queue</h2>
+                        <div id="adminOrderQueue" class="space-y-4 max-h-96 overflow-y-auto"></div>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold mb-4 flex items-center gap-2"><i class="fas fa-check-circle text-green-500"></i> Completed Orders</h2>
+                        <div id="completedOrdersQueue" class="space-y-4 max-h-96 overflow-y-auto"></div>
+                    </div>
+                </div>
+
+                <div class="card-dark p-6 rounded-3xl">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold flex items-center gap-2"><i class="fas fa-utensils text-orange-500"></i> Menu Items</h2>
+                        <button onclick="showAddItemModal()" class="bg-yellow-500 text-black px-4 py-2 rounded-xl font-bold hover:bg-yellow-400 transition"><i class="fas fa-plus mr-2"></i>Add Item</button>
+                    </div>
+                    <div id="menuItemsList" class="space-y-3 max-h-96 overflow-y-auto"></div>
+                </div>
+
+                <div class="card-dark p-6 rounded-3xl">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold flex items-center gap-2"><i class="fas fa-tags text-orange-500"></i> Categories</h2>
+                        <button onclick="showAddCategoryModal()" class="bg-yellow-500 text-black px-4 py-2 rounded-xl font-bold hover:bg-yellow-400 transition"><i class="fas fa-plus mr-2"></i>Add Category</button>
+                    </div>
+                    <div id="categoryList" class="space-y-3 max-h-96 overflow-y-auto"></div>
+                </div>
+
+                <div class="card-dark p-6 rounded-3xl lg:col-span-2">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold flex items-center gap-2"><i class="fas fa-star text-yellow-400"></i> Feedback & Ratings</h2>
+                    </div>
+                    <div id="ownerFeedbackList" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-96 overflow-y-auto"></div>
+                </div>
+
+                <!-- Session Schedule Configuration -->
+                <div class="card-dark p-6 rounded-3xl lg:col-span-2">
+                    <h2 class="text-xl font-bold mb-4 flex items-center gap-2"><i class="fas fa-clock text-yellow-400"></i> Session Schedule</h2>
+                    <p class="text-xs text-slate-400 mb-4">Set ordering windows in 12-hour AM/PM format (e.g., 09:00 AM, 02:00 PM)</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="text-xs text-slate-400 uppercase font-bold block mb-2">🍱 Lunch Session</label>
+                            <div class="flex items-center gap-2">
+                                <input type="text" id="adminLunchStart" placeholder="09:00 AM" class="w-full p-2 bg-slate-800 border border-slate-700 rounded-xl text-white text-sm text-center">
+                                <span class="text-slate-500">to</span>
+                                <input type="text" id="adminLunchEnd" placeholder="02:00 PM" class="w-full p-2 bg-slate-800 border border-slate-700 rounded-xl text-white text-sm text-center">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-xs text-slate-400 uppercase font-bold block mb-2">🌙 Evening Session</label>
+                            <div class="flex items-center gap-2">
+                                <input type="text" id="adminEveningStart" placeholder="01:30 PM" class="w-full p-2 bg-slate-800 border border-slate-700 rounded-xl text-white text-sm text-center">
+                                <span class="text-slate-500">to</span>
+                                <input type="text" id="adminEveningEnd" placeholder="08:00 PM" class="w-full p-2 bg-slate-800 border border-slate-700 rounded-xl text-white text-sm text-center">
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="saveSessionConfig()" class="mt-4 bg-yellow-500 text-black px-6 py-2 rounded-xl font-bold hover:bg-yellow-400 transition w-full"><i class="fas fa-save mr-2"></i>Save Session Timings</button>
+                </div>
+            </div>
+            <div class="card-dark p-6 rounded-3xl h-fit space-y-6">
+                <div>
+                    <h3 class="font-bold mb-2 text-sm uppercase text-slate-500">Order Stats</h3>
+                    <div class="flex justify-between text-sm text-slate-300"><span>Pending</span><span id="pendingStat">0</span></div>
+                    <div class="flex justify-between text-sm text-slate-300 mt-2"><span>Completed</span><span id="completedStat">0</span></div>
+                </div>
+                <div>
+                    <h3 class="font-bold mb-2 text-sm uppercase text-slate-500">Revenue Stats</h3>
+                    <div class="flex justify-between text-sm text-slate-300"><span>Pending Revenue</span><span id="pendingRevenue">₹0</span></div>
+                    <div class="flex justify-between text-sm text-slate-300 mt-2"><span>Completed Revenue</span><span id="completedRevenue">₹0</span></div>
+                </div>
+                <button onclick="clearSystemData()" class="w-full text-xs text-slate-500 hover:text-red-400 transition underline">Reset System Data</button>
+                <button onclick="clearCanteenOrders()" class="w-full text-xs text-slate-500 hover:text-red-400 transition underline">Clear Canteen Orders</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="script.js?v=20240613-2" defer></script>
+</body>
+</html>

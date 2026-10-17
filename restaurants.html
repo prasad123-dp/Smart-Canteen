@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restora | Select Canteen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="font-sans" data-page="restaurants">
+
+    <div id="restaurantSelectPage" class="hidden min-h-screen student-bg p-6">
+        <div class="max-w-4xl mx-auto">
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center gap-4">
+                    <button onclick="logout()" class="text-gray-400 hover:text-orange-600"><i class="fas fa-arrow-left"></i></button>
+                    <h2 class="text-3xl font-black text-slate-900">Dashboard</h2>
+                </div>
+                <button onclick="openCartOrdersPageAsync()" class="bg-white px-4 py-2 rounded-xl font-bold text-gray-700 hover:bg-orange-50 transition flex items-center gap-2">
+                    <i class="fas fa-history"></i>
+                    <span>History</span>
+                </button>
+                <button onclick="openFeedbackPage()" class="bg-white px-4 py-2 rounded-xl font-bold text-gray-700 hover:bg-orange-50 transition flex items-center gap-2">
+                    <i class="fas fa-star text-yellow-400"></i>
+                    <span>Feedback</span>
+                </button>
+            </div>
+            <p class="text-gray-500 mb-8">Where would you like to order from today?</p>
+            <div id="restaurantCardsContainer" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+        </div>
+    </div>
+
+    <script src="script.js?v=20240613-2" defer></script>
+</body>
+</html>
